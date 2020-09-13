@@ -1,0 +1,60 @@
+body {
+  padding: 0;
+  margin: 0;
+  height:100vh;
+}
+
+header {
+  height:10vh;
+  background-color:#343a40;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 2vw 0 0;
+}
+
+.title {
+  font-style:italic;
+  font-weight:bold;
+  color:white;
+  font-size:3vh;
+  margin:0;
+}
+
+
+.main {
+  margin-top:10vh;
+  
+}
+
+.btn{
+  padding: .0175rem .2rem;
+}
+
+.action{
+  margin-right:1rem;
+}
+
+.table td{
+  padding: .2rem;
+}
+
+
+@media screen and (min-width: 800px) {
+
+  .title{
+    font-size:5vh;
+  }
+
+
+ .main{
+  width:70vw;
+  margin:auto;
+   margin-top:10vh;
+ }
+ 
+.btn{
+  padding: .175rem .5rem;
+}
+
+}
