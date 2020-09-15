@@ -7,25 +7,28 @@ $(document).ready(function() {
     selectOptions();
     readEmployees();
 
+    //function to populate department options in search form on select of location
     $('#locationOption').change(function(){
         let locationId= $(this).val();
         console.log(locationId);
         $.ajax({
           url: "libs/php/database.php",
           type: 'POST',
+          datatype: 'JSON',
           data: {
             locationId:locationId
           },
           success: function(result) {
-            console.log(result);
-            html = "<option selected> All Department</option>";
-            result.map(department =>{
-              html+=`<option value=${department.name}> 
-                         ${department.name}
-                     </option>`
-            });
+            if(result.status!=404){
+              html = "<option selected> All Department</option>";
+              result.map(department =>{
+                html+=`<option value=${department.name}> 
+                          ${department.name}
+                      </option>`
+              });
            
-            $('#departmentOption').html(html);  
+              $('#departmentOption').html(html);  
+            }
           },
           error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus);
@@ -38,17 +41,17 @@ $(document).ready(function() {
 });
 
 
-function addOption(locationId){
-  
-  console.log(locationId);
+//function to update department select option for selected location in add employee modal
+
+function addOption(locationId){  
   $.ajax({
     url: "libs/php/database.php",
     type: 'POST',
+    datatype: 'JSON',
     data: {
       locationId:locationId
     },
     success: function(result) {
-      console.log(result);
       html = "";
       result.map(department =>{
         html+=`<option value=${department.name}> 
@@ -66,18 +69,18 @@ function addOption(locationId){
 
 }
 
-
+//function to update department select option for selected location in edit modal
 function updateOption(locationId,department=""){
-  
-  console.log(locationId);
+
   $.ajax({
     url: "libs/php/database.php",
     type: 'POST',
+    datatype: 'JSON',
     data: {
       locationId:locationId
     },
     success: function(result) {
-      console.log(result);
+     
       html = "";
       result.map(department =>{
         html+=`<option value=${department.name}> 
@@ -86,6 +89,7 @@ function updateOption(locationId,department=""){
       });
      
       $('#updateDepartment').html(html);
+     
       if(department){
         $('#updateDepartment').val(department);
       }  
@@ -94,10 +98,10 @@ function updateOption(locationId,department=""){
       console.log(textStatus);
       console.log(errorThrown);
     }
-});
-
+  });
 }
 
+//function to delete selected employee
 function deleteEmployee(email,name){
 
   let grant = confirm(`Do you want to delete ${name}?`);
@@ -105,13 +109,17 @@ function deleteEmployee(email,name){
   if(grant == true) {
 
     $.ajax({
-        url: "libs/php/database.php",
+        url: "libs/php/deleteemployee.php",
         type: 'POST',
+        datatype: 'JSON',
         data: {
-          emailid:email
+          id:email
         },
         success: function(result) {
-          readEmployees();
+          if(result.status===200){
+            readEmployees();
+          }
+          alert(`${result.message}`);
         },
         error: function(jqXHR, textStatus, errorThrown) {
           console.log(textStatus);
@@ -121,27 +129,27 @@ function deleteEmployee(email,name){
   }
 }
 
-
+//function to populate select option for location and department field
 function selectOptions(){
   $.ajax({
     url: "libs/php/selectoption.php",
-    type: 'GET',
+    type: 'POST',
     datatype:'JSON',
     success: function(result) {
-     console.log(result);
-     let locOption = "";
-     result.location.map(location =>{
+    
+      let locOption = "";
+      result.location.map(location =>{
       locOption+=`<option value=${location.id}> 
                   ${location.location}
-              </option>`
-     });
+                </option>`
+      });
 
-     depOption = "";
-     result.department.map(department =>{
+      depOption = "";
+      result.department.map(department =>{
       depOption+=`<option value=${department.name}> 
                   ${department.name}
               </option>`
-     });
+      });
     
      $('#departmentOption').html(`<option selected> All Department</option>${depOption}`);
      $('#department').html(`<option selected> All Department</option>${depOption}`);
@@ -153,15 +161,15 @@ function selectOptions(){
         
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      console.log('error');
-      console.log(textStatus);
+     
       console.log(jqXHR);
-       console.log(errorThrown);
+      console.log(errorThrown);
     }
   }); 
 
 }
 
+//function to read all department and location employees on default load
 function readEmployees(){
   let employees = "employees";
 
@@ -175,93 +183,327 @@ function readEmployees(){
     success: function(result) {
      console.log(result);
      html = "";
-     result.map(employee =>{
-       html+=`<tr> 
-                  <td>${employee.firstname} ${employee.lastname}</td>
-                  <td>${employee.email}</td>
-                  <td class="d-none d-lg-table-cell d-xl-table-cell">${employee.manager}</td>
-                  <td class="action">
-                    <button class="btn btn-primary"><span class="fas fa-eye aria-hidden="true"></span></button>
-                    <button class="btn btn-warning" onclick = updateEmployee('${employee.email}')><span class="fas fa-edit" aria-hidden="true"></span></button>
-                    <button class="btn btn-danger" onclick = deleteEmployee('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
-                  </td>
-              </tr>`
-     });
+     if(result.status === 404){
+        html +=`<tr> <td colspan="100">${result.message}</td></tr>`;
+     }else {
+        result.map(employee =>{
+          html+=`<tr> 
+                      <td>${employee.firstname} ${employee.lastname}</td>
+                      <td class="d-none d-s-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell">${employee.email}</td>
+                      <td class="d-none d-md-table-cell d-xl-table-cell">${employee.locname}</td>
+                      <td class="d-none d-md-table-cell d-xl-table-cell">${employee.department}</td>
+                      <td class="action">
+                        <button class="btn btn-primary" onclick = showEmployee('${employee.email}')><span class="fas fa-eye aria-hidden="true"></span></button>
+                        <button class="btn btn-warning" onclick = updateEmployee('${employee.email}')><span class="fas fa-edit" aria-hidden="true"></span></button>
+                        <button class="btn btn-danger" onclick = deleteEmployee('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
+                      </td>
+                  </tr>`
+        });
+     }
      html+='</tbody></table>';
      $('#tbody').html(html);
       
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      console.log('error');
-      console.log(textStatus);
+      html='<tr> <td colspan="100">Database error</td></tr></tbody></table>';
+      $('#tbody').html(html);
       console.log(jqXHR);
-       console.log(errorThrown);
+      console.log(errorThrown);
     }
   }); 
 
 }
 
 
-/*Success function for finding current location*/
-function addEmployee() 
-{
+//function add new employee to database
+function addEmployee() {
+
   let firstName = $('#firstName').val();
   let lastName = $('#lastName').val();
   let email = $('#email').val();
-  let manager = $('#manager').val();
   let location = $('#location').val();
   let department = $('#department').val();
- console.log($('#department').val());
+
+  const error = {
+                 firstName:'',
+                 lastName:'',
+                 email:'',
+                 location:''};
+  
+  if(firstName.trim()==''){
+    error.firstName ="Please enter the First Name";
+  }
+
+  if(lastName.trim()==''){
+    error.lastName ="Please enter the Last Name";
+  }
+
+  if(email.trim()=='' || !(/(.+)@(.+){2,}\.(.+){2,}/.test(email))){
+    error.email ="Please enter the valid email address";
+  }
+
+  if(location =='All Location'){
+    error.location ="Please select location";
+  }
+
+
+    $('#firstNameError').text(error.firstName);
+    $('#lastNameError').text(error.lastName);
+    $('#emailError').text(error.email);
+    $('#locationError').text(error.location);
+
+  if(!error.firstName && !error.lastName && !error.email && !error.location ){
+
+    $('#firstNameError').text('');
+    $('#lastNameError').text('');
+    $('#emailError').text('');
+    $('#locationError').text('');
+
+    $.ajax({
+      url: "libs/php/addemployee.php",
+      type: 'POST',
+      datatype: 'JSON',
+      data: {
+        firstName,
+        lastName,
+        email,
+        location,
+        department
+      },
+      success: function(result) {
+     
+        if(result.status==404){
+          $('.modal-body').append(`<div id="error" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
+        }else{
+          $('#error').remove();
+          $('.modal-body').append(`<div id="success" class="alert alert-success"><strong>Success!</strong> ${result.message}</div>`);
+          $("#addform").trigger("reset");
+          readEmployees();
+  
+        }
+   
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        $('.modal-body').append(`<div id="error" class="alert alert-danger"><strong>Error!</strong>Database Error</div>`);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    }); 
+
+  }
+   
+}
+
+//function reset error and success in employee add modal
+function reset() {
+
+  $('#error').remove();
+  $('#success').remove();
+  $("#addform").trigger("reset");
+  $('#firstNameError').text('');
+  $('#lastNameError').text('');
+  $('#emailError').text('');
+  $('#locationError').text('');
+}
+
+//function reset error and success in update modal
+function resetUpdateForm() {
+
+  $('#updateError').remove();
+  $('#updateSuccess').remove();
+  $('#updateFnameError').text('');
+  $('#updateLnameError').text('');
+  $('#updateEmailError').text('');
+}
+
+//function to display selected employee details on modal
+function showEmployee(email){
+
   $.ajax({
-    url: "libs/php/database.php",
+    url: "libs/php/employeedetails.php",
     type: 'POST',
+    datatype:'JSON',
     data: {
-      firstName,
-      lastName,
-      email,
-      manager,
+      id:email
+    },
+    success: function(result) {
+     console.log(result);
+
+    if(result.status==404){
+      $('#showDetails').append(`<div id="showError" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
+    }else{
+      $('#showName').html(`<b>Name :</b>  ${result.firstname} ${result.lastname}`);
+      $('#showEmail').html(`<b>Email ID :</b>  ${result.email}`);
+      $('#showLocation').html(`<b>Location :</b>  ${result.locname}`);
+      $('#showDepartment').html(`<b>Department :</b>  ${result.department}`);
+      $('#showError').remove();
+      window.$('#showModal').modal('show');
+    }  
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(errorThrown);
+    }
+});
+  
+}
+
+//function to update employee details
+function updateEmployee(email) {
+
+  $.ajax({
+    url: "libs/php/employeedetails.php",
+    type: 'POST',
+    datatype: 'JSON',
+    data: {
+      id:email
+    },
+    success: function(result) {
+
+      if(result.status==404){
+        $('#editModel').append(`<div id="updateError" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
+      }else{
+        $('#updateFirstName').val(result.firstname);
+        $('#updateLastName').val(result.lastname);
+        $('#updateEmail').val(result.email);
+        $('#updateLocation').val(result.location);
+        updateOption(result.location,result.department);
+        $('#hidden').val(result.email);
+      }
+ 
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(jqXHR);
+    }
+  }); 
+
+  window.$('#updateModal').modal('show');	
+
+}
+
+
+// function to save updated employee details to database 
+function editEmployeeDetails(){
+
+  let updatedFirstName=$('#updateFirstName').val();
+  let updatedLastName=$('#updateLastName').val();
+  let updatedEmail=$('#updateEmail').val();
+  let updatedLocation=$('#updateLocation').val();
+  let updatedDepartment=$('#updateDepartment').val(); 
+  let compareVal = $('#hidden').val();
+
+
+  const error = {
+    firstName:'',
+    lastName:'',
+    email:''};
+
+if(updatedFirstName.trim()==''){
+error.firstName ="Please enter the First Name";
+}
+
+if(updatedLastName.trim()==''){
+error.lastName ="Please enter the Last Name";
+}
+
+if(updatedEmail.trim()=='' || !(/(.+)@(.+){2,}\.(.+){2,}/.test(updatedEmail))){
+error.email ="Please enter the valid email address";
+}
+
+$('#updateFnameError').text(error.firstName);
+$('#updateLnameError').text(error.lastName);
+$('#updateEmailError').text(error.email);
+
+
+if(!error.firstName && !error.lastName && !error.email && !error.location ){
+
+$('#updateFnameError').text('');
+$('#updateLnameError').text('');
+$('#updateEmailError').text('');
+
+
+  $.ajax({
+    url: "libs/php/updateemployee.php",
+    type: 'POST',
+    datatype: 'JSON',
+    data: {
+      updatedFirstName,
+      updatedLastName,
+      updatedEmail,
+      updatedLocation,
+      updatedDepartment,
+      compareVal
+    },
+    success: function(result) {
+      console.log(result);
+      if(result.status==404){
+        $('#editModel').append(`<div id="updateError" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
+      }else{
+        $('#updateError').remove();
+        $('#editModel').append(`<div id="updateSuccess" class="alert alert-success"><strong>Success!</strong> ${result.message}</div>`);
+        readEmployees();
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      $('#editModel').append(`<div id="updateError" class="alert alert-danger"><strong>Error!</strong>Database Error</div>`);
+      console.log(textStatus);
+      console.log(errorThrown);
+    }
+  }); 
+} 
+  
+}
+
+
+// Function to display searched list
+
+function searchList(){
+  let location = $('#locationOption').val();
+  let department = $('#departmentOption').val();
+
+  console.log(location);
+   console.log(department);
+
+  $.ajax({
+    url: "libs/php/searchList.php",
+    type: 'POST',
+    datatype: 'JSON',
+    data: {
       location,
       department
     },
     success: function(result) {
       console.log(result);
-       readEmployees(); 
+      html = "";
+      if(result.status === 404){
+        html +=`<tr> <td colspan="100">${result.message}</td></tr>`;
+      }else {
+        result.map(employee =>{
+        html+=`<tr> 
+                  <td>${employee.firstname} ${employee.lastname}</td>
+                  <td class="d-none d-s-table-cell d-lg-table-cell d-xl-table-cell">${employee.email}</td>
+                  <td class="d-none d-lg-table-cell d-xl-table-cell">${employee.locname}</td>
+                  <td class="d-none d-lg-table-cell d-xl-table-cell">${employee.department}</td>
+                  <td class="action">
+                    <button class="btn btn-primary" onclick = showEmployee('${employee.email}')><span class="fas fa-eye aria-hidden="true"></span></button>
+                    <button class="btn btn-warning" onclick = updateEmployee('${employee.email}')><span class="fas fa-edit" aria-hidden="true"></span></button>
+                    <button class="btn btn-danger" onclick = deleteEmployee('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
+                  </td>
+              </tr>`
+        }); 
+     }
+
+     html+='</tbody></table>';
+     $('#tbody').html(html);
+     
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      console.log('error');
+        
+        html='<tr> <td colspan="100">Database error</td></tr></tbody></table>';
+        $('#tbody').html(html);
       console.log(textStatus);
-       console.log(errorThrown);
+      console.log(errorThrown);
     }
   }); 
-   
 }
-
-
-function updateEmployee(email) {
-
-console.log('update');
-$.post("libs/php/database.php", {id:email},
-  function(data,status){
-    console.log(data);
-    let user = JSON.parse(data);
-    $('#updateFirstName').val(user.firstname);
-    $('#updateLastName').val(user.lastname);
-    $('#updateEmail').val(user.email);
-    $('#updateManager').val(user.manager);
-    $('#updateLocation').val(user.location);
-    updateOption(user.location,user.department);
-    
-
-  }
-  
-  );
-
-  window.$('#updateModal').modal('show');
-
-	
-
-}
-  
-
-
-

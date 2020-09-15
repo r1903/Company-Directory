@@ -4,7 +4,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Gazetteer</title>
+		<title>Company Directory</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content="map to display searched country">	
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -15,37 +15,41 @@
 		<div id="container">
 			<header class="d-flex justify-content-between">
 					<h1 class="title">Company Directory</h1>
-                    <button type="button" class="btn bg-white" data-toggle="modal" data-target="#exampleModal">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal">
 					    New Employee
 				    </button>								
 			</header>
 			<main class="main">
-            <form class="row mb-4">
-                <div class="col">
-                    <select name="locationOption" class="form-control mb-2 mr-3" id="locationOption">
-                
-                    </select>
+                <div class="d-flex justify-content-between flex-column flex-md-row formdiv">
+                    <h4 class="d-none d-md-block">Employees List</h4>
+                    <form class="d-flex flex-row">
+                            <div class="mr-2">
+                                <select name="locationOption" class="mb-2 btn" id="locationOption">
+                            
+                                </select>
+                            </div>
+                            <div class="mr-2">
+                                <select name="departmentOption" class="mb-2 btn " id="departmentOption" placeholder="Department">
+                                    
+                                </select>
+                            </div>
+                        <div>
+                            <button type="button" class="btn mb-2 search" onclick="searchList()">Search</button>
+                        </div>
+                    </form> 
                 </div>
-                <div class="col">
-                    <select name="departmentOption" class="form-control mb-2 mr-3" id="departmentOption" placeholder="Department">
-                        
-                    </select>
-                </div>
-                <div class="col">
-                    <button type="button" class="btn btn-primary form-control mb-2 mr-3">Search</button>
-                </div>
-            </form> 
 				<div id="employees">
-                    <table class="table table-bordered table-striped text-center">
+                    <table class="table text-center">
                         <thead>
                             <tr>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Email</th>
-                                <th class="d-none d-lg-table-cell d-xl-table-cell text-center">Manager</th>
-                                <th class="text-center">Actions</th>
+                                <th class="text-center">NAME</th>
+                                <th class="d-none d-md-table-cell text-center">EMAIL ID</th>
+                                <th class="d-none d-md-table-cell text-center">LOCATION</th>
+                                <th class="d-none d-md-table-cell text-center">DEPARTMENT</th>
+                                <th class="text-center">ACTIONS</th>
                             </tr> 
                         <thead>
-                        <tbody id="tbody">          
+                    <tbody id="tbody">          
                 </div>
 				
 				<!-- Modal -->
@@ -53,46 +57,46 @@
 					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel"></h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<h5 class="modal-title" id="exampleModalLabel">Add New Employee</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="reset()">
 								<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body">
+                            <form id="addform">
                                 <div class="form_group">
                                     <label>First Name:</label>
                                     <input type="text" id="firstName" class="form-control" placeholder="First Name"></input>
                                 </div>
+                                <div class="firstNameError mb-3 text-danger" id="firstNameError"></div>
                                 <div class="form_group">
                                     <label>Last Name:</label>
                                     <input type="text" id="lastName" class="form-control" placeholder="Last Name"></input>
                                 </div>
+                                <div class="lastNameError mb-3 text-danger" id="lastNameError"></div>
                                 <div class="form_group">
                                     <label>Email:</label>
                                     <input type="email" id="email" class="form-control" placeholder="Email"></input>
                                 </div>
-                                <div class="form_group">
-                                    <label>Manager:</label>
-                                    <input type="text" id="manager" class="form-control" placeholder="Reporting Manager"></input>
-                                </div>
+                                <div class="emailError mb-3 text-danger" id="emailError"></div>
                                 <div class="form_group">
                                     <label>Location:</label>
                                     <select name="location" class="form-control mb-2 mr-3" id="location" onchange="addOption(this.value)">
                 
-                                    </select>
-                                    
+                                    </select>   
                                 </div>
-                                <div class="form_group">
+                                <div class="locationError mb-3 text-danger" id="locationError"></div>
+                                <div class="form_group mb-3">
                                     <label>Department:</label>
                                     <select name="department" class="form-control mb-2 mr-3" id="department">
                 
                                     </select>
                                 </div>
-							
+                            </form>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-warning" data-dismiss="modal" onclick="addEmployee()">Save</button>
-                                <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+								<button type="button" class="btn" onclick="addEmployee()">Save</button>
+                                <button type="button" class="btn" data-dismiss="modal" onclick="reset()">Back</button>
 							</div>
 						</div>
 					</div>
@@ -104,53 +108,74 @@
 					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel"></h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<h5 class="modal-title" id="exampleModalLabel">Update Employee Details</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="resetUpdateForm()">
 								<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-							<div class="modal-body">
-                                <div class="form_group">
+							<div class="modal-body" id="editModel">
+                                <div class="form_group mb-3">
                                     <label for="updateFirstName">First Name:</label>
                                     <input type="text" id="updateFirstName" class="form-control" placeholde="First Name"></input>
                                 </div>
-                                <div class="form_group">
+                                <div class="mb-3 text-danger" id="updateFnameError"></div>
+                                <div class="form_group mb-3">
                                     <label for="updateLastName">Last Name:</label>
                                     <input type="text" id="updateLastName" class="form-control" placeholde="Last Name"></input>
                                 </div>
-                                <div class="form_group">
+                                <div class="updateLnameError mb-3 text-danger" id="updateLnameError"></div>
+                                <div class="form_group mb-3">
                                     <label for="updateEmail">Email:</label>
                                     <input type="email" id="updateEmail" class="form-control" placeholde="Email"></input>
                                 </div>
-                                <div class="form_group">
-                                    <label for="updateManager">Manager:</label>
-                                    <input type="text" id="updateManager" class="form-control" placeholde="Reporting Manager"></input>
-                                </div>
-                                <div class="form_group">
+                                <div class="updateLnameError mb-3 text-danger" id="updateEmailError"></div>
+                                <div class="form_group mb-3">
                                     <label for="updateLocation">Location:</label>
                                     <select name="updateLocation" class="form-control mb-2" id="updateLocation"  onchange="updateOption(this.value)">
                 
                                     </select>
-                                    
                                 </div>
-                                <div class="form_group">
+                                <div class="updateLnameError mb-3 text-danger"></div>
+                                <div class="form_group mb-3">
                                     <label for="updateDepartment" >Department:</label>
                                     <select name="updatedepartment" class="form-control mb-2" id="updateDepartment">
                 
                                     </select>
-                                    
                                 </div>
-							
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-warning" data-dismiss="modal" onclick="updateEmployee()">Update</button>
-                                <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+								<button type="button" class="btn" onclick="editEmployeeDetails()">Update</button>
+                                <button type="button" class="btn" data-dismiss="modal" onclick="resetUpdateForm()">Back</button>
                                 <input type="hidden" id="hidden">
 							</div>
 						</div>
 					</div>
 				</div>
 				
+                <!----show model--->
+
+                <div class="modal hide fade" id="showModal" role="dialog">
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Employee Details</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body" id="showDetails">
+                                <p id="showName"></p>
+                                <p id="showEmail"></p>
+                                <p id="showLocation"></p>
+                                <p id="showDepartment"></p>
+							
+							</div>
+							<div class="modal-footer">
+                                <button type="button" class="btn btn-warning" data-dismiss="modal">Back</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				
 			</main>
 		</div>
