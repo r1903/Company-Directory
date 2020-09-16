@@ -2,7 +2,7 @@
 /* function to get current location*/
 $(document).ready(function() {
 
-    $('#preloader').fadeOut(4000, function() { $(this).remove(); });
+    $('#preloader').fadeOut(2000, function() { $(this).remove(); });
     $("#container").show();
     selectOptions();
     readEmployees();
@@ -12,7 +12,7 @@ $(document).ready(function() {
         let locationId= $(this).val();
         console.log(locationId);
         $.ajax({
-          url: "libs/php/database.php",
+          url: "libs/php/employeeslist.php",
           type: 'POST',
           datatype: 'JSON',
           data: {
@@ -22,7 +22,7 @@ $(document).ready(function() {
             if(result.status!=404){
               html = "<option selected> All Department</option>";
               result.map(department =>{
-                html+=`<option value=${department.name}> 
+                html+=`<option value=${department.name.replace(' ', '-')}> 
                           ${department.name}
                       </option>`
               });
@@ -45,7 +45,7 @@ $(document).ready(function() {
 
 function addOption(locationId){  
   $.ajax({
-    url: "libs/php/database.php",
+    url: "libs/php/employeeslist.php",
     type: 'POST',
     datatype: 'JSON',
     data: {
@@ -54,7 +54,7 @@ function addOption(locationId){
     success: function(result) {
       html = "";
       result.map(department =>{
-        html+=`<option value=${department.name}> 
+        html+=`<option value=${department.name.replace(' ', '-')}> 
                    ${department.name}
                </option>`
       });
@@ -73,7 +73,7 @@ function addOption(locationId){
 function updateOption(locationId,department=""){
 
   $.ajax({
-    url: "libs/php/database.php",
+    url: "libs/php/employeeslist.php",
     type: 'POST',
     datatype: 'JSON',
     data: {
@@ -83,7 +83,7 @@ function updateOption(locationId,department=""){
      
       html = "";
       result.map(department =>{
-        html+=`<option value=${department.name}> 
+        html+=`<option value=${department.name.replace(' ', '-')}> 
                    ${department.name}
                </option>`
       });
@@ -91,7 +91,7 @@ function updateOption(locationId,department=""){
       $('#updateDepartment').html(html);
      
       if(department){
-        $('#updateDepartment').val(department);
+        $('#updateDepartment').val(department.replace(' ', '-'));
       }  
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -146,7 +146,7 @@ function selectOptions(){
 
       depOption = "";
       result.department.map(department =>{
-      depOption+=`<option value=${department.name}> 
+      depOption+=`<option value=${department.name.replace(' ', '-')}> 
                   ${department.name}
               </option>`
       });
@@ -174,7 +174,7 @@ function readEmployees(){
   let employees = "employees";
 
   $.ajax({
-    url: "libs/php/database.php",
+    url: "libs/php/employeeslist.php",
     type: 'POST',
     datatype:'JSON',
     data: {
@@ -218,12 +218,14 @@ function readEmployees(){
 //function add new employee to database
 function addEmployee() {
 
+  $('#serverError').text('');
+
   let firstName = $('#firstName').val();
   let lastName = $('#lastName').val();
   let email = $('#email').val();
   let location = $('#location').val();
-  let department = $('#department').val();
-
+  let departmentVal = $('#department').val();
+  let department= departmentVal.replace('-', ' ');
   const error = {
                  firstName:'',
                  lastName:'',
@@ -258,6 +260,7 @@ function addEmployee() {
     $('#lastNameError').text('');
     $('#emailError').text('');
     $('#locationError').text('');
+    console.log(firstName);
 
     $.ajax({
       url: "libs/php/addemployee.php",
@@ -271,27 +274,27 @@ function addEmployee() {
         department
       },
       success: function(result) {
-     
-        if(result.status==404){
+      console.log(result);
+        if(result.error){
+          $('#serverError').text(result.error);
+          $('#error').remove();
+        }else if(result.status==404){
           $('.modal-body').append(`<div id="error" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
         }else{
           $('#error').remove();
           $('.modal-body').append(`<div id="success" class="alert alert-success"><strong>Success!</strong> ${result.message}</div>`);
           $("#addform").trigger("reset");
           readEmployees();
-  
         }
    
       },
       error: function(jqXHR, textStatus, errorThrown) {
         $('.modal-body').append(`<div id="error" class="alert alert-danger"><strong>Error!</strong>Database Error</div>`);
         console.log(textStatus);
-        console.log(errorThrown);
+        console.log(jqXHR);
       }
     }); 
-
-  }
-   
+  }  
 }
 
 //function reset error and success in employee add modal
@@ -359,7 +362,7 @@ function updateEmployee(email) {
       id:email
     },
     success: function(result) {
-
+   
       if(result.status==404){
         $('#editModel').append(`<div id="updateError" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
       }else{
@@ -367,6 +370,7 @@ function updateEmployee(email) {
         $('#updateLastName').val(result.lastname);
         $('#updateEmail').val(result.email);
         $('#updateLocation').val(result.location);
+        console.log(result.department);
         updateOption(result.location,result.department);
         $('#hidden').val(result.email);
       }
@@ -386,13 +390,15 @@ function updateEmployee(email) {
 // function to save updated employee details to database 
 function editEmployeeDetails(){
 
+  $('#updateServerError').text('');
+
   let updatedFirstName=$('#updateFirstName').val();
   let updatedLastName=$('#updateLastName').val();
   let updatedEmail=$('#updateEmail').val();
   let updatedLocation=$('#updateLocation').val();
-  let updatedDepartment=$('#updateDepartment').val(); 
+  let updatedVal=$('#updateDepartment').val(); 
   let compareVal = $('#hidden').val();
-
+  let updatedDepartment = updatedVal.replace('-', ' ');
 
   const error = {
     firstName:'',
@@ -436,8 +442,11 @@ $('#updateEmailError').text('');
       compareVal
     },
     success: function(result) {
-      console.log(result);
-      if(result.status==404){
+    
+      if(result.error){
+        $('#updateServerError').text(result.error);
+        $('#updateError').remove();
+      }else if(result.status==404){
         $('#editModel').append(`<div id="updateError" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
       }else{
         $('#updateError').remove();

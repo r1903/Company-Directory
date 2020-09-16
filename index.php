@@ -6,17 +6,19 @@
 		<meta charset="utf-8">
 		<title>Company Directory</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="description" content="map to display searched country">	
+		<meta name="description" content="PHP curd operation">	
+        <link rel='icon' href='favicon.ico' type='image/x-icon'>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">        <link rel="stylesheet" href="libs/css/index.css" >
     </head>
 
 	<body>
+        <div id="preloader"></div>
 		<div id="container">
 			<header class="d-flex justify-content-between">
 					<h1 class="title">Company Directory</h1>
                     <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal">
-					    New Employee
+					    Add Employee
 				    </button>								
 			</header>
 			<main class="main">
@@ -52,7 +54,7 @@
                     <tbody id="tbody">          
                 </div>
 				
-				<!-- Modal -->
+				<!-- Add Employee Modal -->
 				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 						<div class="modal-content">
@@ -82,16 +84,15 @@
                                 <div class="form_group">
                                     <label>Location:</label>
                                     <select name="location" class="form-control mb-2 mr-3" id="location" onchange="addOption(this.value)">
-                
                                     </select>   
                                 </div>
                                 <div class="locationError mb-3 text-danger" id="locationError"></div>
-                                <div class="form_group mb-3">
+                                <div class="form_group">
                                     <label>Department:</label>
                                     <select name="department" class="form-control mb-2 mr-3" id="department">
-                
                                     </select>
                                 </div>
+                                <div class="mb-3 text-danger" id="serverError"></div>
                             </form>
 							</div>
 							<div class="modal-footer">
@@ -132,16 +133,15 @@
                                 <div class="form_group mb-3">
                                     <label for="updateLocation">Location:</label>
                                     <select name="updateLocation" class="form-control mb-2" id="updateLocation"  onchange="updateOption(this.value)">
-                
                                     </select>
                                 </div>
                                 <div class="updateLnameError mb-3 text-danger"></div>
-                                <div class="form_group mb-3">
+                                <div class="form_group">
                                     <label for="updateDepartment" >Department:</label>
                                     <select name="updatedepartment" class="form-control mb-2" id="updateDepartment">
-                
                                     </select>
                                 </div>
+                                <div class="mb-3 text-danger" id="updateServerError"></div>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn" onclick="editEmployeeDetails()">Update</button>
@@ -152,7 +152,7 @@
 					</div>
 				</div>
 				
-                <!----show model--->
+                <!----Model to show employee details--->
 
                 <div class="modal hide fade" id="showModal" role="dialog">
 					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

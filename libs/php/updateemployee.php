@@ -2,7 +2,13 @@
 
 require('config.php');
 
-if(isset($_POST['updatedFirstName']) && isset($_POST['updatedLastName']) && isset($_POST['updatedEmail']) && isset($_POST['updatedLocation']) && isset($_POST['updatedDepartment']) && isset($_POST['compareVal'])) {
+if(filter_var($_POST['updatedFirstName'],FILTER_SANITIZE_STRING) == false){
+    $response['error']="Please enter valid First Name";
+ }elseif(filter_var($_POST['updatedLastName'],FILTER_SANITIZE_STRING) == false){
+    $response['error']="Please enter valid Last Name";
+ }elseif(filter_var($_POST['updatedEmail'],FILTER_SANITIZE_EMAIL) == false || filter_var($_POST['updatedEmail'],FILTER_VALIDATE_EMAIL) == false){
+    $response['error']="Please enter valid Email Address";
+ }else{
 
     $query = "UPDATE employee SET firstname='$_POST[updatedFirstName]',lastname='$_POST[updatedLastName]', email= '$_POST[updatedEmail]',location='$_POST[updatedLocation]',department='$_POST[updatedDepartment]' WHERE email = '$_POST[compareVal]'";
     $result = mysqli_query($conn,$query);

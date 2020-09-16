@@ -22,7 +22,7 @@ if(isset($_POST['employees'])) {
 
 }
 
-//selects the liast of departments for selected location.
+//selects the list of departments for selected location.
 if(isset($_POST['locationId'])) {
     
     $location_id = $_POST['locationId'];
