@@ -64,7 +64,7 @@
 								<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-							<div class="modal-body">
+							<div class="modal-body" id="addError">
                             <form id="addform">
                                 <div class="form_group">
                                     <label>First Name:</label>
