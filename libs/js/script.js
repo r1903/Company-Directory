@@ -279,10 +279,10 @@ function addEmployee() {
           $('#serverError').text(result.error);
           $('#error').remove();
         }else if(result.status==404){
-          $('.modal-body').append(`<div id="error" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
+          $('#addError').append(`<div id="error" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
         }else{
           $('#error').remove();
-          $('.modal-body').append(`<div id="success" class="alert alert-success"><strong>Success!</strong> ${result.message}</div>`);
+          $('#addError').append(`<div id="success" class="alert alert-success"><strong>Success!</strong> ${result.message}</div>`);
           $("#addform").trigger("reset");
           readEmployees();
         }
