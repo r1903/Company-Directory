@@ -469,10 +469,9 @@ $('#updateEmailError').text('');
 
 function searchList(){
   let location = $('#locationOption').val();
-  let department = $('#departmentOption').val();
+  let departmentval = $('#departmentOption').val();
 
-  console.log(location);
-   console.log(department);
+  let department = departmentval.replace('-', ' ')
 
   $.ajax({
     url: "libs/php/searchList.php",
