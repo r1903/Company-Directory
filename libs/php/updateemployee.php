@@ -10,7 +10,7 @@ if(filter_var($_POST['updatedFirstName'],FILTER_SANITIZE_STRING) == false){
     $response['error']="Please enter valid Email Address";
  }else{
     $firstName = filter_var($_POST['updatedFirstName'],FILTER_SANITIZE_STRING);
-    $lasstName = filter_var($_POST['updatedLastName'],FILTER_SANITIZE_STRING);
+    $lastName = filter_var($_POST['updatedLastName'],FILTER_SANITIZE_STRING);
     $email = filter_var($_POST['updatedEmail'],FILTER_SANITIZE_STRING);
     
     $query = "UPDATE employee SET firstname='$firstName',lastname='$lastName', email= '$email',location='$_POST[updatedLocation]',department='$_POST[updatedDepartment]' WHERE email = '$_POST[compareVal]'";

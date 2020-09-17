@@ -12,7 +12,7 @@ if(filter_var($_POST['firstName'],FILTER_SANITIZE_STRING) == false){
 }else{
 
    $firstName = filter_var($_POST['firstName'],FILTER_SANITIZE_STRING);
-   $lasstName = filter_var($_POST['lastName'],FILTER_SANITIZE_STRING);
+   $lastName = filter_var($_POST['lastName'],FILTER_SANITIZE_STRING);
    $email = filter_var($_POST['email'],FILTER_SANITIZE_STRING);
 
    $query = "INSERT INTO `employee`(`firstname`, `lastname`, `email`, `location`, `department`) VALUES ('$firstName','$lastName','$email','$_POST[location]','$_POST[department]')" ;
