@@ -40,9 +40,10 @@ header button{
 }
 
 .main {
-  height:90vh;
+  height:85vh;
   width:90vw;
-  margin:5vh auto;
+  margin:0 auto;
+  margin-top:5vh;
 }
 
 .formdiv {
