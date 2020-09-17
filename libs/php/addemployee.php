@@ -7,11 +7,15 @@ if(filter_var($_POST['firstName'],FILTER_SANITIZE_STRING) == false){
    $response['error']="Please enter valid First Name";
 }elseif(filter_var($_POST['lastName'],FILTER_SANITIZE_STRING) == false){
    $response['error']="Please enter valid Last Name";
-}elseif(filter_var($_POST['email'],FILTER_SANITIZE_EMAIL) == false || filter_var($_POST['email'],FILTER_VALIDATE_EMAIL) == false){
+}elseif(filter_var($_POST['email'],FILTER_SANITIZE_STRING) == false || filter_var($_POST['email'],FILTER_VALIDATE_EMAIL) == false){
    $response['error']="Please enter valid Email Address";
 }else{
 
-   $query = "INSERT INTO `employee`(`firstname`, `lastname`, `email`, `location`, `department`) VALUES ('$_POST[firstName]','$_POST[lastName]','$_POST[email]','$_POST[location]','$_POST[department]')" ;
+   $firstName = filter_var($_POST['firstName'],FILTER_SANITIZE_STRING);
+   $lasstName = filter_var($_POST['lastName'],FILTER_SANITIZE_STRING);
+   $email = filter_var($_POST['email'],FILTER_SANITIZE_STRING);
+
+   $query = "INSERT INTO `employee`(`firstname`, `lastname`, `email`, `location`, `department`) VALUES ('$firstName','$lastName','$email','$_POST[location]','$_POST[department]')" ;
    $result= mysqli_query($conn,$query);
 
    if($result){
