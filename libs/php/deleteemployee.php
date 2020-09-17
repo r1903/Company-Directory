@@ -15,7 +15,8 @@ if($result){
     $response['status'] = 404;
     $response['message'] = "Failed to delete record--".mysqli_error($conn);
  }
-
+ 
+mysqli_close($conn);
 header('Content-Type: application/json; charset=UTF-8');
 echo json_encode($response);
 }

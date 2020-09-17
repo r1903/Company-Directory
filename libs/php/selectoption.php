@@ -19,6 +19,7 @@ while($row = mysqli_fetch_assoc($result))
     $option['department'][] = $row;
 }
 
+mysqli_close($conn);
 header('Content-Type: application/json; charset=UTF-8');
 echo json_encode($option);
 

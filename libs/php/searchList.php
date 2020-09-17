@@ -8,13 +8,13 @@ if(isset($_POST['location']) && isset($_POST['department'])) {
     $department = $_POST['department'];
 
     if ($location === "All Location" && $department === "All Department") {
-        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location" ;
+        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location ORDER BY firstname" ;
     }elseif ($department === "All Department") {
-        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and employee.location = '$location'" ;
+        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and employee.location = '$location' ORDER BY firstname" ;
     }elseif($location === "All Location"){
-        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and department = '$department'";
+        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and department = '$department' ORDER BY firstname";
     }else{
-        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and employee.location = '$location' and department='$department'" ;
+        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and employee.location = '$location' and department='$department' ORDER BY firstname" ;
     }
 
     $result = mysqli_query($conn, $query);
@@ -31,7 +31,7 @@ if(isset($_POST['location']) && isset($_POST['department'])) {
     }
 
     header('Content-Type: application/json; charset=UTF-8');
-     echo json_encode($response);
+    echo json_encode($response);
      
 } 
 

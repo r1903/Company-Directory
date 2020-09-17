@@ -18,7 +18,8 @@ if(isset($_POST['id'])){
         $response['status'] = 404;
         $response['message'] = "Data not found";
     }
-
+    
+    mysqli_close($conn);
     header('Content-Type: application/json; charset=UTF-8');
     echo json_encode($response);
      

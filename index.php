@@ -43,7 +43,7 @@
 				<div id="employees">
                     <table class="table text-center">
                         <thead>
-                            <tr>
+                            <tr> 
                                 <th class="text-center">NAME</th>
                                 <th class="d-none d-md-table-cell text-center">EMAIL ID</th>
                                 <th class="d-none d-md-table-cell text-center">LOCATION</th>

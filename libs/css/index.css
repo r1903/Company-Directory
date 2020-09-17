@@ -52,9 +52,15 @@ header button{
 #employees {
   background-color:#F6F6F6;
   border-radius:10px;
-  min-height:70vh;
-  max-height:90%;
+  min-height:75vh;
+  max-height:75vh;
   overflow:scroll;
+}
+
+thead tr th {
+  background-color:#F6F6F6;
+  position: sticky;
+  top: 0;
 }
 
 .btn{

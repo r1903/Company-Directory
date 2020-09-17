@@ -6,7 +6,7 @@ require('config.php');
 //fetches all employees onload 
 if(isset($_POST['employees'])) {
  
-    $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location";
+    $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location order by firstname ";
     $result = mysqli_query($conn, $query);
     $response = array();
 
@@ -43,6 +43,7 @@ if(isset($_POST['locationId'])) {
    
 } 
 
+mysqli_close($conn);
 header('Content-Type: application/json; charset=UTF-8');
 echo json_encode($response);
 
