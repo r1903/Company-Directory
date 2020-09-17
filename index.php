@@ -115,22 +115,22 @@
 								</button>
 							</div>
 							<div class="modal-body" id="editModel">
-                                <div class="form_group mb-3">
+                                <div class="form_group">
                                     <label for="updateFirstName">First Name:</label>
                                     <input type="text" id="updateFirstName" class="form-control" placeholde="First Name"></input>
                                 </div>
                                 <div class="mb-3 text-danger" id="updateFnameError"></div>
-                                <div class="form_group mb-3">
+                                <div class="form_group">
                                     <label for="updateLastName">Last Name:</label>
                                     <input type="text" id="updateLastName" class="form-control" placeholde="Last Name"></input>
                                 </div>
                                 <div class="updateLnameError mb-3 text-danger" id="updateLnameError"></div>
-                                <div class="form_group mb-3">
+                                <div class="form_group">
                                     <label for="updateEmail">Email:</label>
                                     <input type="email" id="updateEmail" class="form-control" placeholde="Email"></input>
                                 </div>
                                 <div class="updateLnameError mb-3 text-danger" id="updateEmailError"></div>
-                                <div class="form_group mb-3">
+                                <div class="form_group">
                                     <label for="updateLocation">Location:</label>
                                     <select name="updateLocation" class="form-control mb-2" id="updateLocation"  onchange="updateOption(this.value)">
                                     </select>
