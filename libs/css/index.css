@@ -50,6 +50,11 @@ header button{
   margin-bottom:2vh;
 }
 
+.formdiv form{
+  margin:auto;
+}
+
+
 #employees {
   background-color:#F6F6F6;
   border-radius:10px;
@@ -132,6 +137,14 @@ header {
   padding: .75rem;
 }
 
+.formdiv form{
+  margin:0;
+}
 
+}
 
+@media screen and (min-width: 700px) {
+  .formdiv form{
+    margin:0;
+  }
 }

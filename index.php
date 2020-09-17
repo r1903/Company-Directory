@@ -22,9 +22,9 @@
 				    </button>								
 			</header>
 			<main class="main">
-                <div class="d-flex justify-content-between flex-column flex-md-row formdiv">
+                <div class="d-flex justify-content-between flex-column flex-sm-row formdiv">
                     <h4 class="d-none d-md-block">Employees List</h4>
-                    <form class="d-flex flex-row">
+                    <form class="d-flex flex-row flex-wrap justify-content-around">
                             <div class="mr-2">
                                 <select name="locationOption" class="mb-2 btn" id="locationOption">
                             
