@@ -8,13 +8,13 @@ if(isset($_POST['location']) && isset($_POST['department'])) {
     $department = $_POST['department'];
 
     if ($location === "All Location" && $department === "All Department") {
-        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location ORDER BY firstname" ;
+        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location order by lastname" ;
     }elseif ($department === "All Department") {
-        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and employee.location = '$location' ORDER BY firstname" ;
+        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and employee.location = '$location' order by lastname" ;
     }elseif($location === "All Location"){
-        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and department = '$department' ORDER BY firstname";
+        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and department = '$department' order by lastname";
     }else{
-        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and employee.location = '$location' and department='$department' ORDER BY firstname" ;
+        $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location and employee.location = '$location' and department='$department' order by lastname" ;
     }
 
     $result = mysqli_query($conn, $query);

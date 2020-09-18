@@ -6,7 +6,7 @@ require('config.php');
 //fetches all employees onload 
 if(isset($_POST['employees'])) {
  
-    $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location order by firstname ";
+    $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location order by lastname ";
     $result = mysqli_query($conn, $query);
     $response = array();
 

@@ -102,32 +102,50 @@ function updateOption(locationId,department=""){
 }
 
 //function to delete selected employee
-function deleteEmployee(email,name){
-
-  let grant = confirm(`Do you want to delete ${name}?`);
-
-  if(grant == true) {
-
-    $.ajax({
-        url: "libs/php/deleteemployee.php",
-        type: 'POST',
-        datatype: 'JSON',
-        data: {
-          id:email
-        },
-        success: function(result) {
-          if(result.status===200){
-            readEmployees();
-          }
-          alert(`${result.message}`);
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-          console.log(textStatus);
-          console.log(errorThrown);
-        }
-    }); 
-  }
+function confirmDelete(email,name){
+  $('#hiddendelete').val(email);
+  $('#deletModelBody').text(`Do you want to delete ${name}?`);
+  window.$('#deletModel').modal('show');
 }
+
+
+//function to delete selected employee
+
+function deleteEmployee(){
+
+  let email = $('#hiddendelete').val();
+
+  $.ajax({
+    url: "libs/php/deleteemployee.php",
+    type: 'POST',
+    datatype: 'JSON',
+    data: {
+      id:email
+    },
+    success: function(result) {
+      
+      if(result.status==404){
+        $('#deletModelBody').text('');
+        $("#confirm").addClass("d-none");
+        $('#deletModelBody').append(`<div id="deleteError" class="alert alert-danger mt-2"><strong>Error!</strong>${result.message}</div>`);
+      }else{
+        $('#deleteError').remove();
+        $("#confirm").addClass("d-none");
+        $('#deletModelBody').text('');
+        $('#deletModelBody').append(`<div id="deleteSuccess" class="alert alert-success mt-2"><strong>Success!</strong> ${result.message}</div>`);
+        readEmployees();
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(errorThrown);
+      $('#deletModelBody').text('');
+      $('#deletModelBody').append(`<div id="deleteError" class="alert alert-danger mt-2"><strong>Error!</strong>Database Error</div>`);
+
+    }
+  }); 
+}
+
 
 //function to populate select option for location and department field
 function selectOptions(){
@@ -189,13 +207,13 @@ function readEmployees(){
         result.map(employee =>{
           html+=`<tr> 
                       <td>${employee.firstname} ${employee.lastname}</td>
-                      <td class="d-none d-s-table-cell d-md-table-cell d-lg-table-cell d-xl-table-cell">${employee.email}</td>
-                      <td class="d-none d-md-table-cell d-xl-table-cell">${employee.locname}</td>
-                      <td class="d-none d-md-table-cell d-xl-table-cell">${employee.department}</td>
+                      <td class="d-none d-md-table-cell">${employee.email}</td>
+                      <td class="d-none d-md-table-cell">${employee.locname}</td>
+                      <td class="d-none d-md-table-cell">${employee.department}</td>
                       <td class="action">
                         <button class="btn btn-primary" onclick = showEmployee('${employee.email}')><span class="fas fa-eye aria-hidden="true"></span></button>
                         <button class="btn btn-warning" onclick = updateEmployee('${employee.email}')><span class="fas fa-edit" aria-hidden="true"></span></button>
-                        <button class="btn btn-danger" onclick = deleteEmployee('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
+                        <button class="btn btn-danger" onclick = confirmDelete('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
                       </td>
                   </tr>`
         });
@@ -317,6 +335,12 @@ function resetUpdateForm() {
   $('#updateFnameError').text('');
   $('#updateLnameError').text('');
   $('#updateEmailError').text('');
+}
+
+
+function resetDeleteForm(){
+  $('#deleteError').remove();
+  $('#deleteSuccess').remove();
 }
 
 //function to display selected employee details on modal
@@ -490,13 +514,13 @@ function searchList(){
         result.map(employee =>{
         html+=`<tr> 
                   <td>${employee.firstname} ${employee.lastname}</td>
-                  <td class="d-none d-s-table-cell d-lg-table-cell d-xl-table-cell">${employee.email}</td>
-                  <td class="d-none d-lg-table-cell d-xl-table-cell">${employee.locname}</td>
-                  <td class="d-none d-lg-table-cell d-xl-table-cell">${employee.department}</td>
+                  <td class="d-none d-md-table-cell">${employee.email}</td>
+                  <td class="d-none d-md-table-cell">${employee.locname}</td>
+                  <td class="d-none d-md-table-cell">${employee.department}</td>
                   <td class="action">
                     <button class="btn btn-primary" onclick = showEmployee('${employee.email}')><span class="fas fa-eye aria-hidden="true"></span></button>
                     <button class="btn btn-warning" onclick = updateEmployee('${employee.email}')><span class="fas fa-edit" aria-hidden="true"></span></button>
-                    <button class="btn btn-danger" onclick = deleteEmployee('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
+                    <button class="btn btn-danger" onclick = confirmDelete('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
                   </td>
               </tr>`
         }); 

@@ -24,7 +24,7 @@ header {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:0 1vw 0 0;
+  padding:0 1vw;
 }
 
 header button{
@@ -35,7 +35,7 @@ header button{
   font-style:italic;
   font-weight:bold;
   color:#F6F6F6;
-  font-size:4vh;
+  font-size:3vh;
   margin:0;
 }
 
@@ -61,13 +61,16 @@ header button{
   min-height:75vh;
   max-height:75vh;
   overflow:scroll;
+  margin:0;
 }
 
 thead tr th {
   background-color:#F6F6F6;
   position: sticky;
   top: 0;
+  border:0;
 }
+
 
 .btn{
   padding: .0175rem .2rem;
@@ -109,6 +112,10 @@ label{
    color:#F6F6F6;
 }
 
+#confirm{
+  background-color:red;
+}
+
 .modal-body{
   max-height: 70vh;
   overflow-y: scroll;
@@ -126,7 +133,7 @@ header {
 }
 
 .title {
-    font-size:5vh;
+    font-size:3vh;
 }
  
 .btn {

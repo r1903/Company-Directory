@@ -176,7 +176,27 @@
 						</div>
 					</div>
 				</div>
-				
+
+                <!----- Delete MOdal------->
+
+                <div class="modal" id="deletModel">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Modal Heading</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body" id="deletModelBody">
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn" id="confirm" onclick="deleteEmployee()">Delete</button>
+                                <button type="button" class="btn" data-dismiss="modal" onclick="resetDeleteForm()">Back</button>
+                                <input type="hidden" id="hiddendelete">
+                            </div>
+                        </div>
+                    </div>
+                </div>	
 			</main>
 		</div>
 	<script type="application/javascript" src="libs/js/jquery-2.2.3.min.js"></script>
