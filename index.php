@@ -25,13 +25,16 @@
                 <div class="d-flex justify-content-between flex-column flex-sm-row formdiv">
                     <h4 class="d-none d-md-block">Employees List</h4>
                     <form class="d-flex flex-row flex-wrap justify-content-around">
+                            <div class="mr-2">        
+                                <input type="text" class="mb-2 btn" placeholder="Name" id="nameSearch"/>
+                            </div>  
                             <div class="mr-2">
                                 <select name="locationOption" class="mb-2 btn" id="locationOption">
                             
                                 </select>
                             </div>
                             <div class="mr-2">
-                                <select name="departmentOption" class="mb-2 btn " id="departmentOption" placeholder="Department">
+                                <select name="departmentOption" class="mb-2 btn " id="departmentOption">
                                     
                                 </select>
                             </div>

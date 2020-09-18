@@ -2,11 +2,11 @@
 
 require('config.php');
 
-if(isset($_POST['location']) && isset($_POST['department'])) {
     
     $location = $_POST['location'];
     $department = $_POST['department'];
 
+    
     if ($location === "All Location" && $department === "All Department") {
         $query = "select firstname,lastname,email,employee.location,department,l.location as locname from employee,location l where l.id = employee.location order by lastname" ;
     }elseif ($department === "All Department") {
@@ -31,8 +31,6 @@ if(isset($_POST['location']) && isset($_POST['department'])) {
     }
 
     header('Content-Type: application/json; charset=UTF-8');
-    echo json_encode($response);
-     
-} 
+    echo json_encode($response); 
 
 ?>

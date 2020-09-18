@@ -494,6 +494,8 @@ $('#updateEmailError').text('');
 function searchList(){
   let location = $('#locationOption').val();
   let departmentval = $('#departmentOption').val();
+  let searchName = $('#nameSearch').val();
+  const name = searchName.charAt(0).toUpperCase() + searchName.slice(1);
 
   let department = departmentval.replace('-', ' ')
 
@@ -511,20 +513,32 @@ function searchList(){
       if(result.status === 404){
         html +=`<tr> <td colspan="100">${result.message}</td></tr>`;
       }else {
-        result.map(employee =>{
-        html+=`<tr> 
-                  <td>${employee.firstname} ${employee.lastname}</td>
-                  <td class="d-none d-md-table-cell">${employee.email}</td>
-                  <td class="d-none d-md-table-cell">${employee.locname}</td>
-                  <td class="d-none d-md-table-cell">${employee.department}</td>
-                  <td class="action">
-                    <button class="btn btn-primary" onclick = showEmployee('${employee.email}')><span class="fas fa-eye aria-hidden="true"></span></button>
-                    <button class="btn btn-warning" onclick = updateEmployee('${employee.email}')><span class="fas fa-edit" aria-hidden="true"></span></button>
-                    <button class="btn btn-danger" onclick = confirmDelete('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
-                  </td>
-              </tr>`
-        }); 
-     }
+
+        let response = result;
+        
+        if(name){
+          response = result.filter(employee =>(employee.firstname.includes(name) || employee.lastname.includes(name)))
+        }
+
+        if(response.length < 1){
+          html +=`<tr> <td colspan="100">Employee not found</td></tr>`;
+        }else{
+
+          response.map(employee =>{
+          html+=`<tr> 
+                    <td>${employee.firstname} ${employee.lastname}</td>
+                    <td class="d-none d-md-table-cell">${employee.email}</td>
+                    <td class="d-none d-md-table-cell">${employee.locname}</td>
+                    <td class="d-none d-md-table-cell">${employee.department}</td>
+                    <td class="action">
+                      <button class="btn btn-primary" onclick = showEmployee('${employee.email}')><span class="fas fa-eye aria-hidden="true"></span></button>
+                      <button class="btn btn-warning" onclick = updateEmployee('${employee.email}')><span class="fas fa-edit" aria-hidden="true"></span></button>
+                      <button class="btn btn-danger" onclick = confirmDelete('${employee.email}','${employee.firstname}')><span class="fas fa-trash-alt aria-hidden="true"></span></button>
+                    </td>
+                </tr>`
+          }); 
+        }
+      }
 
      html+='</tbody></table>';
      $('#tbody').html(html);

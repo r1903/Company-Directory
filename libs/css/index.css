@@ -87,9 +87,14 @@ thead tr th {
   padding: .2rem;
 }
 
-#locationOption, #departmentOption{
+#locationOption, #departmentOption, #nameSearch{
   background-color:#F6F6F6;
+  width:27vw;
 }
+
+#nameSearch{
+  color:#212529;
+} 
 
 .search{
   background-color:#1E56A0;
@@ -150,10 +155,18 @@ header {
   margin:0;
 }
 
+#locationOption, #departmentOption, #nameSearch{ 
+  width:auto;
+}
+
 }
 
 @media screen and (min-width: 700px) {
   .formdiv form{
     margin:0;
+  }
+
+  #locationOption, #departmentOption, #nameSearch{ 
+    width:auto;
   }
 }
