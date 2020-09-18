@@ -68,9 +68,11 @@ thead tr th {
   background-color:#F6F6F6;
   position: sticky;
   top: 0;
-  border:0;
 }
 
+.table th{
+  border-top:0;
+}
 
 .btn{
   padding: .0175rem .2rem;
