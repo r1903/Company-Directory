@@ -7,8 +7,4 @@ define('DB_NAME', 'heroku_3c19efa57226fa6');
 
 $conn = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
-if(!$conn) {
-    die("Could not connect to the database:" . mysqli_connect_error());
-}
-
 ?>

@@ -4,8 +4,9 @@ $(document).ready(function() {
 
     $('#preloader').fadeOut(2000, function() { $(this).remove(); });
     $("#container").show();
-    selectOptions();
     readEmployees();
+    selectOptions();
+   
 
     //function to populate department options in search form on select of location
     $('#locationOption').change(function(){
@@ -307,7 +308,8 @@ function addEmployee() {
    
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        $('.modal-body').append(`<div id="error" class="alert alert-danger"><strong>Error!</strong>Database Error</div>`);
+        $('#error').remove();
+        $('#addError').append(`<div id="error" class="alert alert-danger"><strong>Error!</strong> Database unavailable</div>`);
         console.log(textStatus);
         console.log(jqXHR);
       }
@@ -368,6 +370,9 @@ function showEmployee(email){
     }  
     },
     error: function(jqXHR, textStatus, errorThrown) {
+      $('#showError').remove();
+      $('#showDetails').append(`<div id="showError" class="alert alert-danger"><strong>Error!</strong>database unavailable</div>`);
+      window.$('#showModal').modal('show');
       console.log(textStatus);
       console.log(errorThrown);
     }
@@ -388,19 +393,22 @@ function updateEmployee(email) {
     success: function(result) {
    
       if(result.status==404){
+        $('#updateError').remove();
         $('#editModel').append(`<div id="updateError" class="alert alert-danger"><strong>Error!</strong>${result.message}</div>`);
       }else{
         $('#updateFirstName').val(result.firstname);
         $('#updateLastName').val(result.lastname);
         $('#updateEmail').val(result.email);
         $('#updateLocation').val(result.location);
-        console.log(result.department);
+        
         updateOption(result.location,result.department);
         $('#hidden').val(result.email);
       }
  
     },
     error: function(jqXHR, textStatus, errorThrown) {
+      $('#updateError').remove();
+      $('#editModel').append(`<div id="updateError" class="alert alert-danger"><strong>Error!</strong>Database Unavailable</div>`);
       console.log(textStatus);
       console.log(jqXHR);
     }
@@ -479,6 +487,7 @@ $('#updateEmailError').text('');
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
+      $('#updateError').remove();
       $('#editModel').append(`<div id="updateError" class="alert alert-danger"><strong>Error!</strong>Database Error</div>`);
       console.log(textStatus);
       console.log(errorThrown);
